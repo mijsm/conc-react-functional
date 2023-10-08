@@ -1,6 +1,10 @@
 import { Component } from 'react';
 import './App.css';
 
+import Status from './components/Status';
+import Card from './components/Card';
+
+
 class App extends Component {
   constructor (props) {
     super(props); //call to constructor of Component class
@@ -62,15 +66,16 @@ class App extends Component {
       backgroundImage: image,
       cursor: cursor,
     }
-    const output = 
-        <div id={i} key={i} 
-            name="card" 
-            className="col-sm-2 card"
-            style={style} 
-            onClick= {eventHandler}
-            >&nbsp;
-        </div>
-    ;
+
+    const output = (
+      <Card 
+        index={i}
+        style={style}
+        eventHandler={eventHandler}
+      />
+    );
+
+    console.log(output);
 
     return output;
   }
@@ -82,7 +87,8 @@ class App extends Component {
 
     const output = (
       <div className="container" id="board">
-          <div className="pb-2" id="status">{status}</div>
+          {/* <div className="pb-2" id="status">{status}</div> */}
+          <Status status={status} />
           <div className="row">
             <div className="col-sm-1"></div>
             {this.renderCard(0)}
@@ -135,13 +141,15 @@ class App extends Component {
   checkCards() {
     const result = {...this.state};
 
+    result.tries++; //always increment tries
+
     if (this.isMatch()) {
-        result.matches ++;
+        result.matches ++; //increment matches only if matched
         result.images[result.firstPick] = null;
         result.images[result.secondPick] = null;
     }
     result.firstPick = -1;
-    result.secondPick = -1;
+    result.secondPick = -1;    
 
     this.setState({
       images: result.images,
